@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <HEAD>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <TITLE></TITLE>
+        <script>
+        var update;
+        var base = 0;
+        var count = 5;
+        var weatherData;
+        function getWeather(){
+            if ( weatherData == null ){
+                console.log("Fetching weather from api...");
+                var httpRequest = new XMLHttpRequest();
+                httpRequest.onreadystatechange = function() {
+                if (httpRequest.readyState === 4) {
+                    if (httpRequest.status === 200) {	
+                        var data = JSON.parse(httpRequest.responseText);
+                        console.log(data);
+                        weatherData = data;
+                        updateUI(weatherData.properties.periods);
+                        }
+                    }
+                }
+                // httpRequest.open('GET', "https://api.weather.gov/stations/kpit/observations/latest");
+                httpRequest.open('GET', "https://api.weather.gov/gridpoints/PBZ/67,67/forecast");
+                httpRequest.send();
+            }
+            else {
+                console.log("Using cached weather...")
+                base += 5;
+                updateUI(weatherData.properties.periods);
+            }
+
+        }
+        function updateUI(data){
+            document.getElementById("content").classList.remove("next");
+            console.log(base,count);
+            document.getElementById("content").innerHTML = "";
+            if ( base >= data.length){
+                base = 0;
+            }
+            console.log("update");
+            for ( var i in data ){
+                if ( i >= base && i < base + count ){
+                    let d = document.createElement("div");
+                    let title = document.createElement("h1");
+                        title.innerHTML = data[i].name;
+                    d.appendChild(title);
+
+                    let temp = document.createElement("div");
+                        temp.className = "temp";
+                        temp.innerHTML = data[i].temperature+"&#176;";
+                    d.appendChild(temp);
+
+                    let forecast = document.createElement("p");
+                        forecast.innerHTML = data[i].detailedForecast;
+                    d.appendChild(forecast);
+                    
+                    document.getElementById("content").appendChild(d);
+                }
+            }
+            document.getElementById("content").classList.add("next");
+        }
+        getWeather();
+        var t = setInterval(function(){getWeather();},20000);
+        </script>
+        <style>
+            html {
+                height: 100%;
+            }
+            body {
+                background-color: #000;
+                font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+                margin: 0;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                /* background: linear-gradient(#999,darkblue); */
+            }
+            #content {
+                display: flex;
+                margin-top: 13em;
+                height: 29em;
+                justify-content: center;
+                align-items: center;
+                animation-name: next;
+                animation-duration: 20s;
+                animation-iteration-count: infinite;
+                opacity: 0;
+            }
+            #content div {
+                width: 16em;
+                height: 24em;
+                background-color: #fff;
+                border-radius: 1em;
+                justify-content: center;
+                display: flex;
+                flex-flow: column;
+                align-items: center;
+                padding: 1em;
+                margin: 1em;
+            }
+            #content div h1 {
+                text-align: center;
+            }
+            #content div .temp {
+                font-size: 112px;
+                background-color: transparent;
+                padding: 0;
+                margin: 0;
+            }
+            @keyframes next {
+                0% {
+                    opacity: 0;
+                }
+                2% {
+                    opacity: 1;
+                }
+                98% {
+                    opacity: 1;
+                }
+                100% {
+                    opacity: 0;
+                }
+                
+            }
+        </style>
+    </HEAD>
+    <BODY onload="">
+        <div id="content">
+
+        </div>
+    </BODY>
+</html>
