@@ -74,12 +74,16 @@
             }
             body {
                 background-color: #000;
-                font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+                font-family: Arial, Helvetica, sans-serif;
                 color: #000;
                 margin: 0;
                 background-repeat: no-repeat;
                 background-attachment: fixed;
                 /* background: linear-gradient(#999,darkblue); */
+                /* animation-name: animatedBack;
+                animation-iteration-count: infinite;
+                animation-duration: 60s; */
+
             }
             #content {
                 display: flex;
@@ -104,29 +108,29 @@
                 padding: 1em;
                 margin: 1em;
             }
-            #content div h1 {
+            #content div h1, #content div p {
                 text-align: center;
             }
             #content div .temp {
+                font-weight: bold;
                 font-size: 112px;
+                width: auto;
                 background-color: transparent;
                 padding: 0;
                 margin: 0;
             }
             @keyframes next {
-                0% {
-                    opacity: 0;
-                }
-                2% {
-                    opacity: 1;
-                }
-                98% {
-                    opacity: 1;
-                }
-                100% {
-                    opacity: 0;
-                }
-                
+                0% {opacity: 0;}
+                2% {opacity: 1;}
+                98% {opacity: 1;}
+                100% {opacity: 0;}
+            }
+            @keyframes animatedBack {
+                0% { background-color: skyblue; }
+                25% { background-color: deepskyblue; }
+                50% { background-color: darkslateblue; }
+                75% { background-color: deepskyblue; }
+                100% { background-color: skyblue; }
             }
         </style>
     </HEAD>
